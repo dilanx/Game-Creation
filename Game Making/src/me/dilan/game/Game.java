@@ -19,7 +19,7 @@ public class Game extends Canvas implements Runnable{
 
 
 	/*
-	 * 
+	 * Explain stuff about this
 	 * 
 	 */
 
