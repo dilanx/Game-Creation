@@ -26,6 +26,7 @@ public class Game extends Canvas implements Runnable{
 	private ObjectManager manager;
 	private Camera camera;
 	private Health health;
+	
 
 	private static final long serialVersionUID = 2248161283577396772L;
 	public boolean running = false;
