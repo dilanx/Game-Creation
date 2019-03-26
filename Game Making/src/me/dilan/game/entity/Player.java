@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import me.dilan.game.util.Animate;
 import me.dilan.game.util.Bounds;
 import me.dilan.game.util.Identification;
 import me.dilan.game.util.ObjectManager;
@@ -12,6 +13,8 @@ import me.dilan.game.view.ImageLoader;
 public class Player extends Entity{
 	
 	private boolean holdingUp, holdingDown, sprinting, facingLeft;
+	
+	private Animate animation;
 	
 	public int walkingSpeed = 5;
 	
@@ -46,14 +49,22 @@ public class Player extends Entity{
 	public void setHoldingDown(boolean holdingDown) {
 		this.holdingDown = holdingDown;
 	}
+	
+	
 
 	public Player(float x, float y, ObjectManager manager) {
-		super(x, y, 32, 64, Identification.ENTITY_PLAYER, manager);
+		super(x, y, 100-24-24, 74, Identification.ENTITY_PLAYER, manager);
 		//gravityEnabled = false;
+		animation = new Animate(10, ImageLoader.player_idle, ImageLoader.player_running);
+		
 	}
 	
+	
 	public void tick() {
-		
+		if (vx != 0)
+			animation.run(1);
+		else
+			animation.run(0);
 	}
 	
 	
@@ -62,12 +73,14 @@ public class Player extends Entity{
 		
 		if (vx < 0) facingLeft = true;
 		if (vx > 0) facingLeft = false;
+			
+		animation.draw(g, (facingLeft ? (int) x+((width+48)/2) : (int) x-((width+48)/2)), (int) y, (facingLeft ? -(width+48) : (width+48)), height);
 		
-		if (facingLeft)
+		/*if (facingLeft)
 			g.drawImage(ImageLoader.player, (int) x + width, (int) y, -width, height, null);
 		else
 			g.drawImage(ImageLoader.player, (int) x, (int) y, null);
-		
+		*/
 		
 //		g.setColor(Color.red);
 //		g.fillRect((int) x, (int) y, width, height);
@@ -75,7 +88,7 @@ public class Player extends Entity{
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.white);
 //		g2.draw(bounds().bottom());
-		g2.draw(bounds().top());
+		//g2.draw(bounds().top());
 //		g2.draw(bounds().left());
 //		g2.draw(bounds().right());
 

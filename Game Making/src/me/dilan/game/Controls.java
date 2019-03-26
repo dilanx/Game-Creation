@@ -28,6 +28,10 @@ public class Controls extends KeyAdapter{
 				if (key == KeyEvent.VK_SPACE && p.getVy() == 0) {
 					p.setVy(-8);
 				}
+				
+				//for picture taking purposes
+				if (key == KeyEvent.VK_Q) Game.ticking = false;
+				
 				if (key == KeyEvent.VK_W) p.setHoldingUp(true);
 				if (key == KeyEvent.VK_S) p.setHoldingDown(true);
 				if (key == KeyEvent.VK_P && Bullet.canFire) {

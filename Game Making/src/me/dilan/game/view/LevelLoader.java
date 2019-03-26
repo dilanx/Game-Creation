@@ -22,9 +22,13 @@ public class LevelLoader {
 		try {
 			BufferedImage level = ImageIO.read(new File("res/levels/" + levelId + ".png"));
 			
+			Game.LEVEL_WIDTH = level.getWidth() * 32;
+			Game.LEVEL_HEIGHT = level.getHeight() * 32;
+			
 			Camera.maxX = level.getWidth() * 32;
 			Camera.maxY = level.getHeight() * 32 + 32;
 			
+			Player p = null;
 			
 			for (int x = 0; x < level.getWidth(); x++) {
 				for (int y = 0; y < level.getHeight(); y++) {
@@ -39,13 +43,14 @@ public class LevelLoader {
 						manager.addBlock(new Ground(x * 32, y * 32));
 					}
 					if (isRed(r, g, b)) {
-						manager.addPrimary(new Player(x * 32, y * 32, manager));
+						p = new Player(x * 32, y * 32, manager);
+						manager.addPrimary(p);
 					}
 					if (isGreen(r, g, b)) {
 						manager.addBlock(new Elevator(x * 32, y * 32));
 					}
 					if (isBlue(r, g, b)) {
-						manager.addPrimary(new Boss(x * 32, y * 32, manager));
+						manager.addPrimary(new Boss(x * 32, y * 32, manager, p));
 					}
 					if (isStrawberry(r, g, b)) {
 						manager.addBlock(new TopCollider(x * 32, y * 32));

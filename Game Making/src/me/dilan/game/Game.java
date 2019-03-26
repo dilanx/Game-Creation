@@ -17,6 +17,7 @@ import me.dilan.game.view.Window;
 
 public class Game extends Canvas implements Runnable{
 
+	
 
 	/*
 	 * Explain stuff about this
@@ -33,6 +34,8 @@ public class Game extends Canvas implements Runnable{
 	private Thread thread;
 
 	public static int WIDTH = 700, HEIGHT = 500;
+	
+	public static int LEVEL_WIDTH = 0, LEVEL_HEIGHT = 0;
 
 	public Game() {
 
@@ -71,7 +74,7 @@ public class Game extends Canvas implements Runnable{
 		
 		LevelLoader.loadLevel("1-1", this, manager);
 
-	
+		
 
 		
 
@@ -80,6 +83,7 @@ public class Game extends Canvas implements Runnable{
 		this.addKeyListener(new Controls(manager));
 
 
+		
 
 
 	}
@@ -91,7 +95,8 @@ public class Game extends Canvas implements Runnable{
 
 	}
 
-
+	public static boolean ticking = true;
+	
 	public static void main(String[] args) {
 		new Game();
 	}
@@ -109,7 +114,8 @@ public class Game extends Canvas implements Runnable{
 			difference += (now - time) / nanoframes;
 			time = now;
 			while (difference >= 1) {
-				tick();
+				//if ticking for picture taking purposes
+				if (ticking) tick();
 				difference--;
 			}
 			render();
@@ -122,6 +128,7 @@ public class Game extends Canvas implements Runnable{
 		for (int i = 0; i < manager.primary.size(); i++) {
 			GObject obj = manager.primary.get(i);
 			obj.objTick();
+			
 			if (obj instanceof Player) {
 				camera.tick((Player) obj);
 				health.setHealth(((Player) obj).getHealth());

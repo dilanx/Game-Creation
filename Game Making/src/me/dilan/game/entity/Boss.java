@@ -1,6 +1,7 @@
 package me.dilan.game.entity;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import me.dilan.game.GObject;
 import me.dilan.game.Game;
@@ -19,10 +20,11 @@ public class Boss extends Entity{
 
 	private Player playerFighting;
 	
-	public Boss(float x, float y, ObjectManager manager) {
+	public Boss(float x, float y, ObjectManager manager, Player playerFighting) {
 		super(x, y, 256, 256, Identification.ENTITY_BOSS, manager);
 		this.phase = BossPhase.BULLETS_ONE;
 		manager.health.setMaxMiniHealth(hits);
+		this.playerFighting = playerFighting;
 	}
 
 	public enum BossPhase{
@@ -38,12 +40,14 @@ public class Boss extends Entity{
 
 	private int lasersPhaseCount = 0;
 	private int lasersX = 0;
-	private boolean showLaser = false;
+	private boolean lockLaser = false;
+	private boolean filledLaser = false;
 
 	private int currentVelocity = 2;
+	private int laserVelocity = 5;
 
 	private int wait = 0;
-
+	
 	//60 ticks per second
 	public void tick() {
 
@@ -51,20 +55,37 @@ public class Boss extends Entity{
 			hits++;
 
 		if (phase == BossPhase.LASERS) {
-			
 			if (lasersPhaseCount % 2 == 0) {
-				lasersX += 2;
-				if (lasersX == Game.WIDTH - 64)
+				
+				if (lasersPhaseCount == 2 && lasersX >= playerFighting.getX() - (playerFighting.getWidth() / 2)) {
+					lockLaser = true;
+					
+					steps++;
+					
+					if (steps >= 180) {
+						
+					}
+					
+					if (steps >= 60) {
+						filledLaser = true;
+						if (new Rectangle(lasersX, 0, 64, 800).intersects(playerFighting.bounds().bottom())) {
+							playerFighting.setHealth(playerFighting.getHealth() - 1);
+						}
+					}
+				}else {
+					if (!lockLaser) lasersX += laserVelocity;
+				}
+				
+				
+				if (lasersX >= Game.LEVEL_WIDTH - 64)
 					lasersPhaseCount++;
 			}
 			else if (lasersPhaseCount % 2 == 1) {
-				lasersX -= 2;
 				
-				if (lasersPhaseCount == 5) {
-					//if (lasersX == ) TODO
-				}
+				if (!lockLaser) lasersX -= laserVelocity;
+
 				
-				if (lasersX == 0)
+				if (lasersX <= 0)
 					lasersPhaseCount++;
 			}
 
@@ -158,8 +179,12 @@ public class Boss extends Entity{
 		else
 			g.drawImage(ImageLoader.boss, (int) x, (int) y, null);
 
-		if (showLaser) {
-			g.drawImage(ImageLoader.laser_empty, lasersX, 0, null);
+		
+		if (phase == BossPhase.LASERS) {
+			if (filledLaser)
+				g.drawImage(ImageLoader.laser_filled, lasersX, 0, null);
+			else
+				g.drawImage(ImageLoader.laser_empty, lasersX, 0, null);
 		}
 
 	}

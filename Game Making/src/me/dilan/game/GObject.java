@@ -21,10 +21,8 @@ public abstract class GObject {
 		this.height = height;
 		
 		this.id = id;
-		
 	}
-	
-	
+
 	public float getX() {
 		return x;
 	}
@@ -34,7 +32,7 @@ public abstract class GObject {
 	public float getVx() {
 		return vx;
 	}
-
+	
 
 	public int getWidth() {
 		return width;
@@ -83,7 +81,6 @@ public abstract class GObject {
 	public void setId(Identification id) {
 		this.id = id;
 	}
-	
 	
 	public abstract void objTick();
 	public abstract void objRender(Graphics g);
